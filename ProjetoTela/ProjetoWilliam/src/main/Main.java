@@ -10,6 +10,7 @@ package main;
  */
 public class Main {
     public static void main(String[] args) {
-        
+        controle.Conection con = new controle.Conection();
+        con.conectar();
     }
 }

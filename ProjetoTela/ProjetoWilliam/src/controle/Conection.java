@@ -13,15 +13,12 @@ import model.Produto;
  * @author murilo ruz
  */
 public class Conection {
-    private String url;
-    private String user;
-    private String psw;
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultset = null;
     private Produto prod;
     public void conectar() {
-        String servidor = "jdbc:mysql://localhost:3306/bd_projetoWilliam";
+        String servidor = "jdbc:mysql://127.0.0.1:3306/sistema";
         String usuario = "root";
         String senha = "";
         String driver = "com.mysql.cj.jdbc.Driver";
