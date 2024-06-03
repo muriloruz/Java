@@ -33,8 +33,9 @@ public class Conection {
         }
     }
     public void inserir() {
+        prod = Produto.getInstance();
         try {
-            String query = "INSERT INTO `cadastro` (`cod`, `status`, `nome`, `descricao`, `qtd_estoque`, `estoque_minimo`, `estoque_maximo`, `preco_compra`, `preco_venda`, `bar_code`, `ncm`, `fator`, `data_cadastro`, `imagem`)"
+            String query = "INSERT INTO `produto` (`id`,`cod`, `status`, `nome`, `descricao`, `qtd_estoque`, `estoque_minimo`, `estoque_maximo`, `preco_compra`, `preco_venda`, `bar_code`, `ncm`, `fator`, `data_cadastro`, `imagem`)"
                     + " VALUES (NULL, '" + prod.getCod() + "', '" + prod.getStatus() + "', '" + prod.getNome() + "', '" + prod.getDescricao() + "', '" + prod.getQtd_estoque() + "', '" + prod.getEstoque_minimo() + "', '" + prod.getEstoque_maximo() + "', '" + prod.getPrecoCompra() + "', '" + prod.getPrecoVenda() + "', '" + prod.getBar_code() + "', '" + prod.getNcm() + "', '" + 
                     prod.getFator()+ "', '" + prod.getData_cadastro()+ "', '" + prod.getImagem() +"')";
             System.out.println(query);

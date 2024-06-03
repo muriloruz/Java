@@ -17,18 +17,18 @@ public class Produto {
     private int qtd_estoque;
     private int estoque_minimo;
     private int estoque_maximo;
-    private BigDecimal precoCompra;
-    private BigDecimal precoVenda;
-    private int bar_code;
+    private double precoCompra;
+    private double precoVenda;
+    private long bar_code;
     private long ncm;
-    private BigDecimal fator;
+    private double fator;
     private Timestamp data_cadastro;
     private String imagem;
     private static Produto instanciaUnica;
     
     private Produto(){}
     
-    public Produto getInstance(){
+    public static Produto getInstance(){
         if (instanciaUnica == null) {
             instanciaUnica = new Produto();
         }
@@ -63,15 +63,15 @@ public class Produto {
         return estoque_maximo;
     }
 
-    public BigDecimal getPrecoCompra() {
+    public double getPrecoCompra() {
         return precoCompra;
     }
 
-    public BigDecimal getPrecoVenda() {
+    public double getPrecoVenda() {
         return precoVenda;
     }
 
-    public int getBar_code() {
+    public long getBar_code() {
         return bar_code;
     }
 
@@ -79,7 +79,7 @@ public class Produto {
         return ncm;
     }
 
-    public BigDecimal getFator() {
+    public double getFator() {
         return fator;
     }
 
@@ -119,15 +119,15 @@ public class Produto {
         this.estoque_maximo = estoque_maximo;
     }
 
-    public void setPrecoCompra(BigDecimal precoCompra) {
+    public void setPrecoCompra(double precoCompra) {
         this.precoCompra = precoCompra;
     }
 
-    public void setPrecoVenda(BigDecimal precoVenda) {
+    public void setPrecoVenda(double precoVenda) {
         this.precoVenda = precoVenda;
     }
 
-    public void setBar_code(int bar_code) {
+    public void setBar_code(long bar_code) {
         this.bar_code = bar_code;
     }
 
@@ -135,7 +135,7 @@ public class Produto {
         this.ncm = ncm;
     }
 
-    public void setFator(BigDecimal fator) {
+    public void setFator(double fator) {
         this.fator = fator;
     }
 
