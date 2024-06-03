@@ -13,15 +13,12 @@ import model.Produto;
  * @author murilo ruz
  */
 public class Conection {
-    private String url;
-    private String user;
-    private String psw;
     private Connection connection = null;
     private Statement statement = null;
     private ResultSet resultset = null;
     private Produto prod;
     public void conectar() {
-        String servidor = "jdbc:mysql://localhost:3306/bd_projetoWilliam";
+        String servidor = "jdbc:mysql://127.0.0.1:3306/sistema";
         String usuario = "root";
         String senha = "";
         String driver = "com.mysql.cj.jdbc.Driver";
@@ -36,8 +33,9 @@ public class Conection {
         }
     }
     public void inserir() {
+        prod = Produto.getInstance();
         try {
-            String query = "INSERT INTO `cadastro` (`cod`, `status`, `nome`, `descricao`, `qtd_estoque`, `estoque_minimo`, `estoque_maximo`, `preco_compra`, `preco_venda`, `bar_code`, `ncm`, `fator`, `data_cadastro`, `imagem`)"
+            String query = "INSERT INTO `produto` (`id`,`cod`, `status`, `nome`, `descricao`, `qtd_estoque`, `estoque_minimo`, `estoque_maximo`, `preco_compra`, `preco_venda`, `bar_code`, `ncm`, `fator`, `data_cadastro`, `imagem`)"
                     + " VALUES (NULL, '" + prod.getCod() + "', '" + prod.getStatus() + "', '" + prod.getNome() + "', '" + prod.getDescricao() + "', '" + prod.getQtd_estoque() + "', '" + prod.getEstoque_minimo() + "', '" + prod.getEstoque_maximo() + "', '" + prod.getPrecoCompra() + "', '" + prod.getPrecoVenda() + "', '" + prod.getBar_code() + "', '" + prod.getNcm() + "', '" + 
                     prod.getFator()+ "', '" + prod.getData_cadastro()+ "', '" + prod.getImagem() +"')";
             System.out.println(query);
