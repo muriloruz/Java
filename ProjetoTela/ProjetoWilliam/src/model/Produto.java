@@ -147,5 +147,20 @@ public class Produto {
         this.imagem = imagem;
     }
     
-    
+    public void printarDados(){
+        System.out.println(this.bar_code);
+        System.out.println(this.cod);
+        System.out.println(this.data_cadastro);
+        System.out.println(this.descricao);
+        System.out.println(this.estoque_maximo);
+        System.out.println(this.estoque_minimo);
+        System.out.println(this.fator);
+        System.out.println(this.imagem);
+        System.out.println(this.ncm);
+        System.out.println(this.nome);
+        System.out.println(this.precoCompra);
+        System.out.println(this.precoVenda);
+        System.out.println(this.qtd_estoque);
+        System.out.println(this.status);
+    }
 }

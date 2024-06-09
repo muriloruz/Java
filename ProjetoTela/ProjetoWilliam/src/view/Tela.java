@@ -4,8 +4,22 @@
  */
 package view;
 
-import java.text.ParseException;
+import model.*;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import static java.lang.Integer.parseInt;
+import static java.lang.Long.parseLong;
+import java.net.URL;
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.util.Date;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -43,13 +57,8 @@ public class Tela extends javax.swing.JFrame {
         Jcbx_status = new javax.swing.JComboBox<>();
         Jlbl_cod = new javax.swing.JLabel();
         Jtf_cod = new javax.swing.JTextField();
-        try {
-            mfdata = new MaskFormatter("##/##/####");
-        } catch (ParseException ex) {
-            JOptionPane.showMessageDialog(null, "Erro com a máscara");
-        }
-        jFmtd_data = new javax.swing.JFormattedTextField(mfdata);
         Jlbl_cod2 = new javax.swing.JLabel();
+        Jdatachooser = new com.toedter.calendar.JDateChooser();
         jPanel3 = new javax.swing.JPanel();
         Jlbl_cod3 = new javax.swing.JLabel();
         Jtf_nome = new javax.swing.JTextField();
@@ -57,7 +66,6 @@ public class Tela extends javax.swing.JFrame {
         Jtf_qntdEstoque = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         Jlbl_cod5 = new javax.swing.JLabel();
-        Jtf_nome1 = new javax.swing.JTextField();
         Jlbl_cod6 = new javax.swing.JLabel();
         Jlbl_imagem = new javax.swing.JLabel();
         Jtf_estqMin = new javax.swing.JTextField();
@@ -74,6 +82,9 @@ public class Tela extends javax.swing.JFrame {
         Jtf_ncm = new javax.swing.JTextField();
         Jlbl_cod13 = new javax.swing.JLabel();
         Jtf_codBarras = new javax.swing.JTextField();
+        Jbtn_chooser = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        Jtp_desc = new javax.swing.JTextPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
 
@@ -91,6 +102,11 @@ public class Tela extends javax.swing.JFrame {
         Jbtn_Novo.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         Jbtn_Novo.setForeground(new java.awt.Color(255, 255, 255));
         Jbtn_Novo.setText("Novo");
+        Jbtn_Novo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jbtn_NovoActionPerformed(evt);
+            }
+        });
 
         Jbtn_Alterar.setBackground(new java.awt.Color(0, 0, 0));
         Jbtn_Alterar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
@@ -116,6 +132,11 @@ public class Tela extends javax.swing.JFrame {
         Jbtn_Limpar.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         Jbtn_Limpar.setForeground(new java.awt.Color(255, 255, 255));
         Jbtn_Limpar.setText("Limpar");
+        Jbtn_Limpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jbtn_LimparActionPerformed(evt);
+            }
+        });
 
         Jbtn_imprimir.setBackground(new java.awt.Color(0, 0, 0));
         Jbtn_imprimir.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
@@ -126,6 +147,11 @@ public class Tela extends javax.swing.JFrame {
         Jbtn_sair.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
         Jbtn_sair.setForeground(new java.awt.Color(255, 255, 255));
         Jbtn_sair.setText("Sair");
+        Jbtn_sair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jbtn_sairActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -166,23 +192,22 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod1.setText("Status");
 
         Jcbx_status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "I - Inativo", "A - Ativo"}));
-        Jcbx_status.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         Jlbl_cod.setFont(new java.awt.Font("Sitka Text", 0, 24)); // NOI18N
         Jlbl_cod.setText("Código");
 
         Jtf_cod.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_cod.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_cod.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_cod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_codActionPerformed(evt);
             }
         });
 
-        jFmtd_data.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
         Jlbl_cod2.setFont(new java.awt.Font("Sitka Text", 0, 24)); // NOI18N
         Jlbl_cod2.setText("Data de Cadastro");
+
+        Jdatachooser.setBorder(javax.swing.BorderFactory.createLineBorder(null));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -198,9 +223,9 @@ public class Tela extends javax.swing.JFrame {
                     .addComponent(Jlbl_cod1)
                     .addComponent(Jcbx_status, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(49, 49, 49)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jFmtd_data, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Jlbl_cod2))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(Jlbl_cod2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Jdatachooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -213,11 +238,16 @@ public class Tela extends javax.swing.JFrame {
                     .addComponent(Jlbl_cod2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(Jcbx_status, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jFmtd_data, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE))
-                    .addComponent(Jtf_cod, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(7, 7, 7))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Jtf_cod, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Jdatachooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(Jcbx_status, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 2, Short.MAX_VALUE)))
+                        .addGap(7, 7, 7))))
         );
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
@@ -226,7 +256,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod3.setText("Nome");
 
         Jtf_nome.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_nome.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_nome.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_nome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_nomeActionPerformed(evt);
@@ -237,7 +267,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod4.setText("Quantidade em Estoque");
 
         Jtf_qntdEstoque.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_qntdEstoque.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_qntdEstoque.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_qntdEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_qntdEstoqueActionPerformed(evt);
@@ -278,21 +308,13 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod5.setFont(new java.awt.Font("Sitka Text", 0, 24)); // NOI18N
         Jlbl_cod5.setText("Descrição");
 
-        Jtf_nome1.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_nome1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        Jtf_nome1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Jtf_nome1ActionPerformed(evt);
-            }
-        });
-
         Jlbl_cod6.setFont(new java.awt.Font("Sitka Text", 0, 24)); // NOI18N
         Jlbl_cod6.setText("Imagem do Produto");
 
         Jlbl_imagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/imgPessoa.png"))); // NOI18N
 
         Jtf_estqMin.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_estqMin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_estqMin.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_estqMin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_estqMinActionPerformed(evt);
@@ -306,7 +328,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod8.setText("Estoque máximo");
 
         Jtf_estqMax.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_estqMax.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_estqMax.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_estqMax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_estqMaxActionPerformed(evt);
@@ -317,7 +339,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod9.setText("Preço de compra");
 
         Jtf_pcCompra.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_pcCompra.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_pcCompra.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_pcCompra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_pcCompraActionPerformed(evt);
@@ -328,7 +350,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod10.setText("Preço de venda");
 
         Jtf_pcVenda.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_pcVenda.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_pcVenda.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_pcVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_pcVendaActionPerformed(evt);
@@ -339,7 +361,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod11.setText("Fator Lucro");
 
         Jtf_fatorLu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_fatorLu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_fatorLu.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_fatorLu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_fatorLuActionPerformed(evt);
@@ -350,7 +372,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod12.setText("NCM");
 
         Jtf_ncm.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_ncm.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_ncm.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_ncm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_ncmActionPerformed(evt);
@@ -361,12 +383,22 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod13.setText("Códigode barras");
 
         Jtf_codBarras.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_codBarras.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Jtf_codBarras.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         Jtf_codBarras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_codBarrasActionPerformed(evt);
             }
         });
+
+        Jbtn_chooser.setText("Selecione Imagem");
+        Jbtn_chooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jbtn_chooserActionPerformed(evt);
+            }
+        });
+
+        Jtp_desc.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jScrollPane2.setViewportView(Jtp_desc);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -375,9 +407,6 @@ public class Tela extends javax.swing.JFrame {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(Jlbl_cod5)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(Jlbl_cod8)
@@ -414,12 +443,16 @@ public class Tela extends javax.swing.JFrame {
                                 .addComponent(Jlbl_cod6)
                                 .addGap(35, 35, 35))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                                .addComponent(Jlbl_imagem)
-                                .addGap(63, 63, 63))))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(Jtf_nome1, javax.swing.GroupLayout.PREFERRED_SIZE, 952, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(Jlbl_imagem, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(Jbtn_chooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(63, 63, 63))))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(Jlbl_cod5)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 912, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -427,8 +460,8 @@ public class Tela extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(Jlbl_cod5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Jtf_nome1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Jlbl_cod8, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -461,7 +494,10 @@ public class Tela extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(Jtf_fatorLu, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(Jtf_ncm, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(Jlbl_imagem))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(Jlbl_imagem)
+                        .addGap(18, 18, 18)
+                        .addComponent(Jbtn_chooser)))
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
@@ -525,10 +561,6 @@ public class Tela extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_Jtf_qntdEstoqueActionPerformed
 
-    private void Jtf_nome1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jtf_nome1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Jtf_nome1ActionPerformed
-
     private void Jtf_estqMinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jtf_estqMinActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_Jtf_estqMinActionPerformed
@@ -564,6 +596,115 @@ public class Tela extends javax.swing.JFrame {
     private void Jbtn_ApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_ApagarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_Jbtn_ApagarActionPerformed
+
+    private void Jbtn_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_chooserActionPerformed
+         joption = new JFileChooser();
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Imagens (JPG, PNG)", "jpg", "png");
+        joption.setFileFilter(imageFilter);
+        joption.showSaveDialog(null);
+        selectedFile = joption.getSelectedFile();
+        String caminho = selectedFile.toString();
+        try {
+            selectedFile = joption.getSelectedFile();
+            enderecoImagem = selectedFile.getAbsolutePath();
+            BufferedImage bi = ImageIO.read(new File(caminho));
+            Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
+            ImageIcon icone = new ImageIcon(img);
+            Jlbl_imagem.setIcon(icone);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Deu errado");
+        }
+    }//GEN-LAST:event_Jbtn_chooserActionPerformed
+
+    private void Jbtn_LimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_LimparActionPerformed
+        Jtf_cod.setText("");
+        Jtf_codBarras.setText("");
+        Jtf_estqMax.setText("");
+        Jtf_estqMin.setText("");
+        Jtf_pcCompra.setText("");
+        Jtf_ncm.setText("");
+        Jtf_fatorLu.setText("");
+        Jtf_pcVenda.setText("");
+        Jtf_qntdEstoque.setText("");
+        Jtf_nome.setText("");
+        Jtp_desc.setText("");
+        try {
+            BufferedImage bi = ImageIO.read(new File("C:\\Users\\muril\\OneDrive\\Área de Trabalho\\projetowillian\\Java\\ProjetoTela\\ProjetoWilliam\\src\\icon\\imgPessoa.png"));
+            Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
+            ImageIcon icone = new ImageIcon(img);
+            Jlbl_imagem.setIcon(icone);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Deu errado");
+        }
+        Jdatachooser.setDate(null);
+    }//GEN-LAST:event_Jbtn_LimparActionPerformed
+
+    private void Jbtn_sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_sairActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_Jbtn_sairActionPerformed
+
+    private void Jbtn_NovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_NovoActionPerformed
+        controle.Conection con = new controle.Conection();
+        con.conectar();
+        
+        String s = Jcbx_status.getSelectedItem().toString();
+        String b = "";
+        if(s.toLowerCase().equals("i-inativo")){
+            b = "I";
+        }else{
+            b = "A";
+        }
+        System.out.println(enderecoImagem);
+        if(Jtf_cod.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Código está vazio");
+        }else if(Jtf_codBarras.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Código de barras está vazio");
+        }else if(Jtf_estqMax.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Estoque máximo está vazio");
+        }else if(Jtf_estqMin.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Estoque minimo está vazio");
+        }else if(Jtf_fatorLu.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Fator está vazio");
+        }else if(Jtf_ncm.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: NCM está vazio");
+        }else if(Jtf_nome.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Nome está vazio");
+        }else if(Jtf_pcCompra.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Preço compra está vazio");
+        }else if(Jtf_pcVenda.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Preço venda está vazio");
+        }else if(Jtf_qntdEstoque.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Quantidade de estoque está vazio");
+        }else if(enderecoImagem.trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Imagem não selecionada");
+        }else{
+            try {
+                
+                String query = "INSERT INTO `produto` (`cod`, `status`, `nome`, `descricao`, `qtd_estoque`, `estoque_minimo`, `estoque_maximo`, `preco_compra`, `preco_venda`, `bar_code`, `ncm`, `fator`, `data_cadastro`, `imagem`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                System.out.println(query);
+                
+                statement.setString(1, Jtf_cod.getText());//codigo
+                statement.setString(2, b);//Status
+                statement.setString(3, Jtf_nome.getText());//nome
+                statement.setString(4, Jtp_desc.getText());//descriçãoS
+                statement.setInt(5, parseInt(Jtf_qntdEstoque.getText()));//qtd_estoque
+                statement.setInt(6, parseInt(Jtf_estqMin.getText()));//estoque_minimo
+                statement.setInt(7, parseInt(Jtf_estqMax.getText()));//estoque_maximo
+                statement.setString(8, Jtf_pcCompra.getText());//preco_compra
+                statement.setString(9, Jtf_pcVenda.getText());//preco_venda
+                statement.setString(10, Jtf_codBarras.getText());//bar_code
+                statement.setString(11, Jtf_ncm.getText());//ncm
+                statement.setString(12, Jtf_fatorLu.getText());//fator
+                statement.setTimestamp(13,Timestamp.from(Jdatachooser.getDate().toInstant()));
+                statement.setString(14,enderecoImagem);
+                this.statement.execute(query);
+                System.out.println("Registro inserido com sucesso");
+                
+            } catch (Exception e) {
+                System.out.println("Erro:" + e.toString());
+            }
+        }
+    }//GEN-LAST:event_Jbtn_NovoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -605,9 +746,11 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JButton Jbtn_Apagar;
     private javax.swing.JButton Jbtn_Limpar;
     private javax.swing.JButton Jbtn_Novo;
+    private javax.swing.JButton Jbtn_chooser;
     private javax.swing.JButton Jbtn_imprimir;
     private javax.swing.JButton Jbtn_sair;
     private javax.swing.JComboBox<String> Jcbx_status;
+    private com.toedter.calendar.JDateChooser Jdatachooser;
     private javax.swing.JLabel Jlbl_cod;
     private javax.swing.JLabel Jlbl_cod1;
     private javax.swing.JLabel Jlbl_cod10;
@@ -630,17 +773,21 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JTextField Jtf_fatorLu;
     private javax.swing.JTextField Jtf_ncm;
     private javax.swing.JTextField Jtf_nome;
-    private javax.swing.JTextField Jtf_nome1;
     private javax.swing.JTextField Jtf_pcCompra;
     private javax.swing.JTextField Jtf_pcVenda;
     private javax.swing.JTextField Jtf_qntdEstoque;
+    private javax.swing.JTextPane Jtp_desc;
     private javax.swing.JButton jButton2;
-    private javax.swing.JFormattedTextField jFmtd_data;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+    private JFileChooser joption;
+    PreparedStatement statement = null;
+    File selectedFile;
+    String enderecoImagem=" ";
 }

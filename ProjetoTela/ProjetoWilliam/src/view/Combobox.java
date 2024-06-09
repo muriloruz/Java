@@ -18,7 +18,7 @@ public class Combobox<E> extends JComboBox<E>{
     public Combobox(){
         setBackground(Color.WHITE);
         setBorder(new EmptyBorder(15,3,5,3));
-        setUI(new ComboUI());
+//        setUI(new ComboUI());
     }
 
     public void setLabelText(String labelText) {
@@ -36,9 +36,9 @@ public class Combobox<E> extends JComboBox<E>{
     public Color getLineColor() {
         return lineColor;
     }
-    private class ComboUI extends BasicComboBoxUI{
-        public ComboUI(){
-            
-        }
-    }
+//    private class ComboUI extends BasicComboBoxUI{
+//        public ComboUI(){
+//            
+//        }
+//    }
 }
