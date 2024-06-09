@@ -644,7 +644,7 @@ public class Tela extends javax.swing.JFrame {
     }//GEN-LAST:event_Jbtn_sairActionPerformed
 
     private void Jbtn_NovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_NovoActionPerformed
-        controle.Conection con = new controle.Conection();
+        con = new controle.Conection();
         con.conectar();
         
         String s = Jcbx_status.getSelectedItem().toString();
@@ -678,31 +678,7 @@ public class Tela extends javax.swing.JFrame {
         }else if(enderecoImagem.trim().isEmpty()){
             JOptionPane.showMessageDialog(null, "ERRO: Imagem não selecionada");
         }else{
-            try {
-                
-                String query = "INSERT INTO `produto` (`cod`, `status`, `nome`, `descricao`, `qtd_estoque`, `estoque_minimo`, `estoque_maximo`, `preco_compra`, `preco_venda`, `bar_code`, `ncm`, `fator`, `data_cadastro`, `imagem`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                System.out.println(query);
-                
-                statement.setString(1, Jtf_cod.getText());//codigo
-                statement.setString(2, b);//Status
-                statement.setString(3, Jtf_nome.getText());//nome
-                statement.setString(4, Jtp_desc.getText());//descriçãoS
-                statement.setInt(5, parseInt(Jtf_qntdEstoque.getText()));//qtd_estoque
-                statement.setInt(6, parseInt(Jtf_estqMin.getText()));//estoque_minimo
-                statement.setInt(7, parseInt(Jtf_estqMax.getText()));//estoque_maximo
-                statement.setString(8, Jtf_pcCompra.getText());//preco_compra
-                statement.setString(9, Jtf_pcVenda.getText());//preco_venda
-                statement.setString(10, Jtf_codBarras.getText());//bar_code
-                statement.setString(11, Jtf_ncm.getText());//ncm
-                statement.setString(12, Jtf_fatorLu.getText());//fator
-                statement.setTimestamp(13,Timestamp.from(Jdatachooser.getDate().toInstant()));
-                statement.setString(14,enderecoImagem);
-                this.statement.execute(query);
-                System.out.println("Registro inserido com sucesso");
-                
-            } catch (Exception e) {
-                System.out.println("Erro:" + e.toString());
-            }
+            con.inserir(Jtf_cod.getText(),b,Jtf_nome.getText(),Jtp_desc.getText(),Jtf_qntdEstoque.getText(), Jtf_estqMin.getText(),Jtf_estqMax.getText(),Jtf_pcCompra.getText(),Jtf_pcVenda.getText(),Jtf_codBarras.getText(),Jtf_ncm.getText(),Jtf_fatorLu.getText(),Jdatachooser.getDate().toInstant(),enderecoImagem);
         }
     }//GEN-LAST:event_Jbtn_NovoActionPerformed
 
@@ -790,4 +766,5 @@ public class Tela extends javax.swing.JFrame {
     PreparedStatement statement = null;
     File selectedFile;
     String enderecoImagem=" ";
+    controle.Conection con;
 }
