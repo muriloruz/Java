@@ -4,7 +4,7 @@
  */
 package main;
 
-import view.Tela;
+import view.TelaInicial;
 
 /**
  * @since 27/05/2024 
@@ -12,7 +12,7 @@ import view.Tela;
  */
 public class Main {
     public static void main(String[] args) {
-        Tela tl = new Tela();
+        TelaInicial tl = new TelaInicial();
         tl.setVisible(true);
     }
 }

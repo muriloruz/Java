@@ -608,10 +608,6 @@ public class Tela extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_Jtf_pcVendaActionPerformed
 
-    private void Jtf_fatorLuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jtf_fatorLuActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Jtf_fatorLuActionPerformed
-
     private void Jtf_ncmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jtf_ncmActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_Jtf_ncmActionPerformed
@@ -623,7 +619,8 @@ public class Tela extends javax.swing.JFrame {
     private void Jbtn_AlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_AlterarActionPerformed
         con = new controle.Conection();
         con.conectar();
-        
+        int r = Jtbl.getSelectedRow();
+        String click = (Jtbl.getModel().getValueAt(r, 0).toString());
         String s = Jcbx_status.getSelectedItem().toString();
         String b = "";
         if(s.toLowerCase().equals("i-inativo")){
@@ -640,8 +637,6 @@ public class Tela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "ERRO: Estoque máximo está vazio");
         }else if(Jtf_estqMin.getText().trim().isEmpty()){
             JOptionPane.showMessageDialog(null, "ERRO: Estoque minimo está vazio");
-        }else if(Jtf_fatorLu.getText().trim().isEmpty()){
-            JOptionPane.showMessageDialog(null, "ERRO: Fator está vazio");
         }else if(Jtf_ncm.getText().trim().isEmpty()){
             JOptionPane.showMessageDialog(null, "ERRO: NCM está vazio");
         }else if(Jtf_nome.getText().trim().isEmpty()){
@@ -653,7 +648,8 @@ public class Tela extends javax.swing.JFrame {
         }else if(Jtf_qntdEstoque.getText().trim().isEmpty()){
             JOptionPane.showMessageDialog(null, "ERRO: Quantidade de estoque está vazio");
         }else{
-            con.inserir(Jtf_cod.getText(),b,Jtf_nome.getText(),Jtp_desc.getText(),Jtf_qntdEstoque.getText(), Jtf_estqMin.getText(),Jtf_estqMax.getText(),Jtf_pcCompra.getText(),Jtf_pcVenda.getText(),Jtf_codBarras.getText(),Jtf_ncm.getText(),Jtf_fatorLu.getText(),Jdatachooser.getDate().toInstant(),enderecoImagem);
+            con.update(click,Jtf_cod.getText(),b,Jtf_nome.getText(),Jtp_desc.getText(),Jtf_qntdEstoque.getText(), Jtf_estqMin.getText(),Jtf_estqMax.getText(),Jtf_pcCompra.getText(),Jtf_pcVenda.getText(),Jtf_codBarras.getText(),Jtf_ncm.getText(),Jtf_fatorLu.getText(),Jdatachooser.getDate().toInstant(),enderecoImagem);
+            updataTable();
         }
     }//GEN-LAST:event_Jbtn_AlterarActionPerformed
 
@@ -686,6 +682,7 @@ public class Tela extends javax.swing.JFrame {
             }
             }
             limpar();
+            updataTable();
     }//GEN-LAST:event_Jbtn_ApagarActionPerformed
 
     private void Jbtn_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_chooserActionPerformed
@@ -749,6 +746,7 @@ public class Tela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "ERRO: Imagem não selecionada");
         }else{
             con.inserir(Jtf_cod.getText(),b,Jtf_nome.getText(),Jtp_desc.getText(),Jtf_qntdEstoque.getText(), Jtf_estqMin.getText(),Jtf_estqMax.getText(),Jtf_pcCompra.getText(),Jtf_pcVenda.getText(),Jtf_codBarras.getText(),Jtf_ncm.getText(),claclularFator().toString(),Jdatachooser.getDate().toInstant(),enderecoImagem);
+            updataTable();
         }
     }//GEN-LAST:event_Jbtn_NovoActionPerformed
 
@@ -797,7 +795,7 @@ public class Tela extends javax.swing.JFrame {
                 Jtf_pcCompra.setText(pcCompra);
                 Jtf_pcVenda.setText(pcVenda);
                 Jtf_ncm.setText(ncm);
-                Jtf_fatorLu.setText(fator);
+                Jtf_fatorLu.setText(fator+"%");
                 Jdatachooser.setDate(data);
                 BufferedImage bi = ImageIO.read(new File(imagem));
                 Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
@@ -824,6 +822,10 @@ public class Tela extends javax.swing.JFrame {
     System.err.format("ERRO: Impressão não encontrada", e.getMessage());
     }
     }//GEN-LAST:event_Jbtn_imprimirActionPerformed
+
+    private void Jtf_fatorLuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jtf_fatorLuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Jtf_fatorLuActionPerformed
     private void updataTable(){
         Connection sqlConn;
         PreparedStatement pst;
@@ -873,7 +875,7 @@ public class Tela extends javax.swing.JFrame {
         Jtf_nome.setText("");
         Jtp_desc.setText("");
         try {
-            BufferedImage bi = ImageIO.read(new File("C:\\Users\\muril\\OneDrive\\Área de Trabalho\\projetowillian\\Java\\ProjetoTela\\ProjetoWilliam\\src\\icon\\imgPessoa.png"));
+            BufferedImage bi = ImageIO.read(new File("C:\\Users\\jpgam\\Desktop\\javaGithub\\Java\\ProjetoTela\\ProjetoWilliam\\src\\icon\\imgPessoa.png"));
             Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
             ImageIcon icone = new ImageIcon(img);
             Jlbl_imagem.setIcon(icone);
