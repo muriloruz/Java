@@ -4,22 +4,38 @@
  */
 package view;
 
+import controle.Conection;
+import java.sql.ResultSetMetaData;
 import model.*;
+import java.sql.Connection;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.IOException;
 import static java.lang.Integer.parseInt;
 import static java.lang.Long.parseLong;
 import java.net.URL;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
+import java.time.Instant;
 import java.util.Date;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import javax.swing.text.MaskFormatter;
 
 /**
@@ -86,7 +102,7 @@ public class Tela extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         Jtp_desc = new javax.swing.JTextPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        Jtbl = new javax.swing.JTable();
 
         jButton2.setBackground(new java.awt.Color(0, 0, 0));
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
@@ -95,6 +111,11 @@ public class Tela extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Sistema | Cadastro de Produtos");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -142,6 +163,11 @@ public class Tela extends javax.swing.JFrame {
         Jbtn_imprimir.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
         Jbtn_imprimir.setForeground(new java.awt.Color(255, 255, 255));
         Jbtn_imprimir.setText("Imprimir");
+        Jbtn_imprimir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Jbtn_imprimirActionPerformed(evt);
+            }
+        });
 
         Jbtn_sair.setBackground(new java.awt.Color(255, 0, 0));
         Jbtn_sair.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
@@ -192,12 +218,13 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod1.setText("Status");
 
         Jcbx_status.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "I - Inativo", "A - Ativo"}));
+        Jcbx_status.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         Jlbl_cod.setFont(new java.awt.Font("Sitka Text", 0, 24)); // NOI18N
         Jlbl_cod.setText("Código");
 
         Jtf_cod.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_cod.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_cod.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_cod.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_codActionPerformed(evt);
@@ -207,7 +234,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod2.setFont(new java.awt.Font("Sitka Text", 0, 24)); // NOI18N
         Jlbl_cod2.setText("Data de Cadastro");
 
-        Jdatachooser.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jdatachooser.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -256,7 +283,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod3.setText("Nome");
 
         Jtf_nome.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_nome.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_nome.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_nome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_nomeActionPerformed(evt);
@@ -267,7 +294,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod4.setText("Quantidade em Estoque");
 
         Jtf_qntdEstoque.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_qntdEstoque.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_qntdEstoque.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_qntdEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_qntdEstoqueActionPerformed(evt);
@@ -314,7 +341,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_imagem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/imgPessoa.png"))); // NOI18N
 
         Jtf_estqMin.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_estqMin.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_estqMin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_estqMin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_estqMinActionPerformed(evt);
@@ -328,7 +355,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod8.setText("Estoque máximo");
 
         Jtf_estqMax.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_estqMax.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_estqMax.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_estqMax.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_estqMaxActionPerformed(evt);
@@ -339,7 +366,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod9.setText("Preço de compra");
 
         Jtf_pcCompra.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_pcCompra.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_pcCompra.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_pcCompra.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_pcCompraActionPerformed(evt);
@@ -350,7 +377,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod10.setText("Preço de venda");
 
         Jtf_pcVenda.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_pcVenda.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_pcVenda.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_pcVenda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_pcVendaActionPerformed(evt);
@@ -361,7 +388,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod11.setText("Fator Lucro");
 
         Jtf_fatorLu.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_fatorLu.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_fatorLu.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_fatorLu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_fatorLuActionPerformed(evt);
@@ -372,7 +399,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod12.setText("NCM");
 
         Jtf_ncm.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_ncm.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_ncm.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_ncm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_ncmActionPerformed(evt);
@@ -383,7 +410,7 @@ public class Tela extends javax.swing.JFrame {
         Jlbl_cod13.setText("Códigode barras");
 
         Jtf_codBarras.setFont(new java.awt.Font("Segoe UI", 0, 16)); // NOI18N
-        Jtf_codBarras.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        Jtf_codBarras.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         Jtf_codBarras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Jtf_codBarrasActionPerformed(evt);
@@ -397,7 +424,6 @@ public class Tela extends javax.swing.JFrame {
             }
         });
 
-        Jtp_desc.setBorder(javax.swing.BorderFactory.createLineBorder(null));
         jScrollPane2.setViewportView(Jtp_desc);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -501,7 +527,7 @@ public class Tela extends javax.swing.JFrame {
                 .addContainerGap(40, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        Jtbl.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -512,7 +538,12 @@ public class Tela extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        Jtbl.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                JtblMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(Jtbl);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -590,60 +621,6 @@ public class Tela extends javax.swing.JFrame {
     }//GEN-LAST:event_Jtf_codBarrasActionPerformed
 
     private void Jbtn_AlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_AlterarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Jbtn_AlterarActionPerformed
-
-    private void Jbtn_ApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_ApagarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_Jbtn_ApagarActionPerformed
-
-    private void Jbtn_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_chooserActionPerformed
-         joption = new JFileChooser();
-        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Imagens (JPG, PNG)", "jpg", "png");
-        joption.setFileFilter(imageFilter);
-        joption.showSaveDialog(null);
-        selectedFile = joption.getSelectedFile();
-        String caminho = selectedFile.toString();
-        try {
-            selectedFile = joption.getSelectedFile();
-            enderecoImagem = selectedFile.getAbsolutePath();
-            BufferedImage bi = ImageIO.read(new File(caminho));
-            Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
-            ImageIcon icone = new ImageIcon(img);
-            Jlbl_imagem.setIcon(icone);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Deu errado");
-        }
-    }//GEN-LAST:event_Jbtn_chooserActionPerformed
-
-    private void Jbtn_LimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_LimparActionPerformed
-        Jtf_cod.setText("");
-        Jtf_codBarras.setText("");
-        Jtf_estqMax.setText("");
-        Jtf_estqMin.setText("");
-        Jtf_pcCompra.setText("");
-        Jtf_ncm.setText("");
-        Jtf_fatorLu.setText("");
-        Jtf_pcVenda.setText("");
-        Jtf_qntdEstoque.setText("");
-        Jtf_nome.setText("");
-        Jtp_desc.setText("");
-        try {
-            BufferedImage bi = ImageIO.read(new File("C:\\Users\\muril\\OneDrive\\Área de Trabalho\\projetowillian\\Java\\ProjetoTela\\ProjetoWilliam\\src\\icon\\imgPessoa.png"));
-            Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
-            ImageIcon icone = new ImageIcon(img);
-            Jlbl_imagem.setIcon(icone);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Deu errado");
-        }
-        Jdatachooser.setDate(null);
-    }//GEN-LAST:event_Jbtn_LimparActionPerformed
-
-    private void Jbtn_sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_sairActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_Jbtn_sairActionPerformed
-
-    private void Jbtn_NovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_NovoActionPerformed
         con = new controle.Conection();
         con.conectar();
         
@@ -675,16 +652,243 @@ public class Tela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "ERRO: Preço venda está vazio");
         }else if(Jtf_qntdEstoque.getText().trim().isEmpty()){
             JOptionPane.showMessageDialog(null, "ERRO: Quantidade de estoque está vazio");
-        }else if(enderecoImagem.trim().isEmpty()){
-            JOptionPane.showMessageDialog(null, "ERRO: Imagem não selecionada");
         }else{
             con.inserir(Jtf_cod.getText(),b,Jtf_nome.getText(),Jtp_desc.getText(),Jtf_qntdEstoque.getText(), Jtf_estqMin.getText(),Jtf_estqMax.getText(),Jtf_pcCompra.getText(),Jtf_pcVenda.getText(),Jtf_codBarras.getText(),Jtf_ncm.getText(),Jtf_fatorLu.getText(),Jdatachooser.getDate().toInstant(),enderecoImagem);
         }
+    }//GEN-LAST:event_Jbtn_AlterarActionPerformed
+
+    private void Jbtn_ApagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_ApagarActionPerformed
+        String servidor = "jdbc:mysql://127.0.0.1:3306/sistema";
+        String usuario = "root";
+        String senha = "";
+        ResultSet rs = null;
+        String driver = "com.mysql.cj.jdbc.Driver";    
+        TableModel RecordTable = Jtbl.getModel();
+            int SelectedRows = Jtbl.getSelectedRow();
+            int id = Integer.parseInt(RecordTable.getValueAt(SelectedRows,0).toString());
+            int deleteItem = JOptionPane.showConfirmDialog(null, "Confirma a remoção do registro", "Aviso", JOptionPane.YES_NO_OPTION);
+            if (deleteItem == JOptionPane.YES_OPTION) {
+ 
+            try {
+                Class.forName(driver);
+            
+                Connection sqlConn = DriverManager.getConnection(servidor, usuario, senha);
+                 PreparedStatement pst = sqlConn.prepareStatement("DELETE FROM produto WHERE (id = ?);");
+                pst.setString(1, String.valueOf(id));
+ 
+                pst.executeUpdate();
+ 
+                JOptionPane.showMessageDialog(this, "Registro removido com sucesso!");
+                } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Tela.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            }
+            limpar();
+    }//GEN-LAST:event_Jbtn_ApagarActionPerformed
+
+    private void Jbtn_chooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_chooserActionPerformed
+         joption = new JFileChooser();
+        FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Imagens (JPG, PNG)", "jpg", "png");
+        joption.setFileFilter(imageFilter);
+        joption.showSaveDialog(null);
+        selectedFile = joption.getSelectedFile();
+        String caminho = selectedFile.toString();
+        try {
+            selectedFile = joption.getSelectedFile();
+            enderecoImagem = selectedFile.getAbsolutePath();
+            BufferedImage bi = ImageIO.read(new File(caminho));
+            Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
+            ImageIcon icone = new ImageIcon(img);
+            Jlbl_imagem.setIcon(icone);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Deu errado");
+        }
+    }//GEN-LAST:event_Jbtn_chooserActionPerformed
+
+    private void Jbtn_LimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_LimparActionPerformed
+        limpar();
+    }//GEN-LAST:event_Jbtn_LimparActionPerformed
+
+    private void Jbtn_sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_sairActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_Jbtn_sairActionPerformed
+
+    private void Jbtn_NovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_NovoActionPerformed
+        con = new controle.Conection();
+        con.conectar();
+        
+        String s = Jcbx_status.getSelectedItem().toString();
+        String b = "";
+        if(s.toLowerCase().equals("i-inativo")){
+            b = "I";
+        }else{
+            b = "A";
+        }
+        System.out.println(enderecoImagem);
+        if(Jtf_cod.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Código está vazio");
+        }else if(Jtf_codBarras.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Código de barras está vazio");
+        }else if(Jtf_estqMax.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Estoque máximo está vazio");
+        }else if(Jtf_estqMin.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Estoque minimo está vazio");
+        }else if(Jtf_ncm.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: NCM está vazio");
+        }else if(Jtf_nome.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Nome está vazio");
+        }else if(Jtf_pcCompra.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Preço compra está vazio");
+        }else if(Jtf_pcVenda.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Preço venda está vazio");
+        }else if(Jtf_qntdEstoque.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Quantidade de estoque está vazio");
+        }else if(enderecoImagem.trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "ERRO: Imagem não selecionada");
+        }else{
+            con.inserir(Jtf_cod.getText(),b,Jtf_nome.getText(),Jtp_desc.getText(),Jtf_qntdEstoque.getText(), Jtf_estqMin.getText(),Jtf_estqMax.getText(),Jtf_pcCompra.getText(),Jtf_pcVenda.getText(),Jtf_codBarras.getText(),Jtf_ncm.getText(),claclularFator().toString(),Jdatachooser.getDate().toInstant(),enderecoImagem);
+        }
     }//GEN-LAST:event_Jbtn_NovoActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
+    private void JtblMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_JtblMouseClicked
+        String servidor = "jdbc:mysql://127.0.0.1:3306/sistema";
+        String usuario = "root";
+        String senha = "";
+        ResultSet rs = null;
+        String driver = "com.mysql.cj.jdbc.Driver";
+        int r = Jtbl.getSelectedRow();
+        String click = (Jtbl.getModel().getValueAt(r, 0).toString());
+        String sql = "SELECT * FROM sistema.produto WHERE id='"+click+"'";
+        try{
+            Connection conn = DriverManager.getConnection(servidor, usuario, senha);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                
+                this.id = rs.getString(1);
+                String cod = rs.getString(2);
+                String status = rs.getString(3);
+                String nome = rs.getString(4);
+                String desc = rs.getString(5);
+                String qntdEstoque = rs.getString(6);
+                String estqMin = rs.getString(7);
+                String estqMax = rs.getString(8);
+                String pcCompra = rs.getString(9);
+                String pcVenda = rs.getString(10);
+                String barCode = rs.getString(11);
+                String ncm = rs.getString(12);
+                String fator = rs.getString(13);
+                Date data = rs.getDate(14);
+                String imagem = rs.getString(15);
+                String b = "";
+                
+                if(status.toLowerCase().equals("a")) Jcbx_status.setSelectedIndex(1);
+                else Jcbx_status.setSelectedIndex(0);
+                
+                Jtf_cod.setText(cod);
+                Jtf_nome.setText(nome);
+                Jtf_codBarras.setText(barCode);
+                Jtp_desc.setText(desc);
+                Jtf_qntdEstoque.setText(qntdEstoque);
+                Jtf_estqMax.setText(estqMax);
+                Jtf_estqMin.setText(estqMin);
+                Jtf_pcCompra.setText(pcCompra);
+                Jtf_pcVenda.setText(pcVenda);
+                Jtf_ncm.setText(ncm);
+                Jtf_fatorLu.setText(fator);
+                Jdatachooser.setDate(data);
+                BufferedImage bi = ImageIO.read(new File(imagem));
+                Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
+                ImageIcon icone = new ImageIcon(img);
+                Jlbl_imagem.setIcon(icone);
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Error:"+e);
+        }
+    }//GEN-LAST:event_JtblMouseClicked
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        updataTable();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void Jbtn_imprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Jbtn_imprimirActionPerformed
+         MessageFormat header = new MessageFormat ("Impressão Padrão");
+         MessageFormat footer = new MessageFormat ("Página {0, number, integer}");
+    try{
+        Jtbl.print(JTable.PrintMode.NORMAL,header,footer);
+        
+    }catch(PrinterException e)
+    {
+    System.err.format("ERRO: Impressão não encontrada", e.getMessage());
+    }
+    }//GEN-LAST:event_Jbtn_imprimirActionPerformed
+    private void updataTable(){
+        Connection sqlConn;
+        PreparedStatement pst;
+        String servidor = "jdbc:mysql://127.0.0.1:3306/sistema";
+        String usuario = "root";
+        String senha = "";
+        ResultSet rs = null;
+        String driver = "com.mysql.cj.jdbc.Driver";
+        try{
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            sqlConn = DriverManager.getConnection(servidor, usuario, senha);
+            pst = sqlConn.prepareStatement("Select *from produto;");
+            rs = pst.executeQuery();
+            ResultSetMetaData stData = rs.getMetaData();
+            int q = stData.getColumnCount();
+            DefaultTableModel RecordTable = new DefaultTableModel();
+            //defina o modelo da tabela
+            Jtbl.setModel(RecordTable);
+            //adcione as colunas
+            for(int i = 1; i <= q; i++){
+                RecordTable.addColumn(stData.getColumnName(i));
+            }
+            //adcione as linhas
+            while (rs.next()){
+                Vector<Object> rowData = new Vector<>();
+                for(int i = 1; i <= q; i++) {
+                    rowData.add(rs.getObject(i));
+                }
+                RecordTable.addRow(rowData);
+            }
+            //Notifique a tabela que o modelo foi alterado
+            Jtbl.setModel(RecordTable);
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this,"Erro:" + e.getMessage());
+        }
+    }
+    public void limpar(){
+        Jtf_cod.setText("");
+        Jtf_codBarras.setText("");
+        Jtf_estqMax.setText("");
+        Jtf_estqMin.setText("");
+        Jtf_pcCompra.setText("");
+        Jtf_ncm.setText("");
+        Jtf_fatorLu.setText("");
+        Jtf_pcVenda.setText("");
+        Jtf_qntdEstoque.setText("");
+        Jtf_nome.setText("");
+        Jtp_desc.setText("");
+        try {
+            BufferedImage bi = ImageIO.read(new File("C:\\Users\\muril\\OneDrive\\Área de Trabalho\\projetowillian\\Java\\ProjetoTela\\ProjetoWilliam\\src\\icon\\imgPessoa.png"));
+            Image img = bi.getScaledInstance(160, 175, Image.SCALE_SMOOTH);
+            ImageIcon icone = new ImageIcon(img);
+            Jlbl_imagem.setIcon(icone);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(null, "Deu errado");
+        }
+        Jdatachooser.setDate(null);
+    }
+    
+    public Double claclularFator(){
+        double pcV = Double.parseDouble(Jtf_pcVenda.getText());
+        double pcC = Double.parseDouble(Jtf_pcCompra.getText());
+        double fator = (pcV-pcC)/pcV*100;
+        return fator;
+    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -742,6 +946,7 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JLabel Jlbl_cod8;
     private javax.swing.JLabel Jlbl_cod9;
     private javax.swing.JLabel Jlbl_imagem;
+    private javax.swing.JTable Jtbl;
     private javax.swing.JTextField Jtf_cod;
     private javax.swing.JTextField Jtf_codBarras;
     private javax.swing.JTextField Jtf_estqMax;
@@ -760,11 +965,11 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
     private JFileChooser joption;
     PreparedStatement statement = null;
     File selectedFile;
     String enderecoImagem=" ";
     controle.Conection con;
+    private String id;
 }
