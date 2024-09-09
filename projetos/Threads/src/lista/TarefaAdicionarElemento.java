@@ -10,17 +10,16 @@ package lista;
  */
 public class TarefaAdicionarElemento implements Runnable {
     private Lista lista;
-    private int numThread;
-    public TarefaAdicionarElemento(Lista lista, int numThread) {
+    private int numeroDaThread;
+     public TarefaAdicionarElemento(Lista lista, int numero) {
         this.lista = lista;
-        this.numThread = numThread;
+        this.numeroDaThread =  numero;
     }
-    
 
     @Override
-    public void run(){
-        for(int j = 0;j<100;j++){
-            lista.adicionaElementos("Thread "+numThread+": "+j);
+    public void run() {
+        for (int i = 0; i < 100; i++) {
+            lista.adicionaElementos("Thread " + numeroDaThread + " - " + i );
         }
     }
 }

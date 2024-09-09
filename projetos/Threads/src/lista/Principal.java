@@ -9,15 +9,14 @@ package lista;
  * @author murilo
  */
 public class Principal{
-    public static void main(String[] args) throws InterruptedException{
+    public static void main(String[] args) throws InterruptedException {
+
         Lista lista = new Lista();
-        for(int i =0;i<10;i++){
-            Thread thread = new Thread(new TarefaAdicionarElemento(lista,i));
-            thread.start();
+
+        for (int i = 0; i < 10; i++) {
+            new Thread(new TarefaAdicionarElemento(lista, i)).start();
         }
-        Thread.sleep(2000);
-        
-        for(int k=0;k<lista.tamanho();k++) 
-           System.out.println(lista.pegaElemento(k));
+
+        new Thread(new TarefaImprimir(lista)).start();
     }
 }
